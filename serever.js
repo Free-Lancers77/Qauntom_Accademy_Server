@@ -11,9 +11,9 @@ app.use(cookieParser());//for cookies
 app.use(cors({
     credentials: true,}));//for cors  Prevents Unauthorized Access to Sensitive Data
 //
-const Port=process.env.PORT || 5000;
+const Port=process.env.PORT || 4000;
 app.get("/",(req,res)=>{
-    res.send("hi");
+    res.send("helo");
 })
 app.listen(Port, () => {
     DbConnect();
