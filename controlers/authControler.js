@@ -1,6 +1,7 @@
 import { User } from "../models/usermodel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendWelcomeEmail } from "../config/Nodemailer.js";
 
 export const register=async(req,res)=>{
     //take the info from the body
@@ -32,6 +33,7 @@ export const register=async(req,res)=>{
 
 
                 })
+                sendWelcomeEmail(user.email);
 
             return res.status(200).json({message:"user created successfully"});
     }
@@ -88,4 +90,26 @@ export const login=async(req,res)=>{
     console.log(error);
     return res.status(500).json({error:"server error"});
  }
+}
+export const logout=async(req,res)=>{
+    try{
+        res.clearCookie('token',{
+            httpOnly:true,
+            secure:process.env.NODE_ENV==="production",
+            sameSite:process.env.NODE_ENV=='production'?'none':'strict',
+            maxAge:7*24*60*60*1000
+    
+    
+    
+    
+        });
+        return res.status(200).json({message:"user logged out successfully"});
+    }
+
+        
+
+    
+    catch(error){
+        console.log(error);
+    }
 }
