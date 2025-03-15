@@ -6,11 +6,20 @@ const transporter = nodemailer.createTransport({
     auth:{
         user:"8807ef001@smtp-brevo.com",
         pass:"02SfZdzsxNWcPwJ4" , 
+    
     }
-})
+}
+
+
+
+)
+
+console.log("Auth Object:", transporter.options.auth);
 export const sendWelcomeEmail=async(email)=>{
+    console.log(process.env.SMTP_USER);
+    console.log(process.env.SMTP_PASS);
     try{
-        const logoUrl = "https://imgur.com/a/TRKjWsh"; // Replace with your hosted image URL
+        const logoUrl = "https://i.imgur.com/LqQ2BTf.jpeg"; // Replace with your hosted image URL
 
         const mailOptions = {
             from:"hussienzoughaib@gmail.com",
