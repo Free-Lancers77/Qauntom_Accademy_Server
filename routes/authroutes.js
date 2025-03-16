@@ -1,7 +1,10 @@
-import { register,login,logout} from "../controlers/authControler.js";
+import { register,login,logout,verfyEmail,verifyopt} from "../controlers/authControler.js";
+import { verfytoken } from "../middlware/cookiesfunction.js";
 import express from "express";
 const router=express.Router();
 router.post("/register",register);
 router.post("/login",login);
 router.post("/logout",logout);
+router.post("/verifyopt",verfytoken,verifyopt);
+router.post("/verifyemail",verfytoken,verfyEmail);
 export default router;

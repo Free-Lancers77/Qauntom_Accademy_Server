@@ -44,3 +44,19 @@ export const sendWelcomeEmail=async(email)=>{
     }
 }
 
+export const sendotpemail=async(email,otp)=>{
+    try{
+        const mailOptions = {
+            from:"hussienzoughaib@gmail.com",
+            to: email,
+            subject: "Account Verification",
+        text: `Your OTP is : ${otp}.Verfy your account using it `
+       
+        };
+        await transporter.sendMail(mailOptions);
+        console.log("Otp email sent");
+    }
+    catch(error){
+        console.log(error);
+    }
+}

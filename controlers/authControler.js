@@ -1,7 +1,8 @@
 import { User } from "../models/usermodel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { sendWelcomeEmail } from "../config/Nodemailer.js";
+import { sendWelcomeEmail ,sendotpemail} from "../config/Nodemailer.js";
+import { genrateotp } from "./functions.js";
 
 export const register=async(req,res)=>{
     //take the info from the body
@@ -113,3 +114,64 @@ export const logout=async(req,res)=>{
         console.log(error);
     }
 }
+export const verifyopt=async(req,res)=>{
+    try{
+        const {userId}=req.body;
+        const targetuser=await User.findById(userId);
+        if(!targetuser){
+            console.log("user not found");
+        }   
+        if(targetuser.isVerfied){
+            return res.json({message:'user already verfied'});
+        }
+        //generate the number that he will use to verify  if the user is not verfied
+        const opt=genrateotp();
+        targetuser.verifyoption=opt;
+        targetuser.verfyexpires=Date.now()+24*60*60*1000;   
+        await targetuser.save();  
+        await sendotpemail(targetuser.email,opt);  
+        return res.status(200).json({message:"otp sent successfully"});
+
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+export const verfyEmail=async(req,res)=>{
+
+    try{
+        const {userId,otp}=req.body;
+        if(!userId || !otp){
+            return res.status(404).json({error:"all fields are required"});
+        }
+        const targetuser=await User.findById(userId);
+        if(!targetuser){
+            return res.status(404).json({message:'user not found'});
+        }
+        if(targetuser.isVerfied){
+            return res.json({message:'user already verfied'});
+        }
+        if(targetuser.verifyoption!==otp || targetuser.verifyoption==''){
+            return res.json({message:"wrong otp"});
+        }
+        if(targetuser.verfyexpires<Date.now()){
+            return res.json({message:"otp expired"});
+        }
+        targetuser.isVerfied=true;
+        targetuser.verifyoption="";
+        targetuser.verfyexpires=0;
+        await targetuser.save();
+        return res.status(200).json({message:"user verfied successfully"});
+
+     
+    }
+    catch(error){
+        console.log(error);
+    }
+}
+ /*5. Summary of the Flow
+User logs in → JWT token is generated and stored in a cookie.
+
+User requests OTP → verfytoken middleware extracts the user ID from the JWT token → verifyopt generates and sends the OTP.
+
+User submits OTP → verfyEmail validates the OTP and marks the user as verifi*/
