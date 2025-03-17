@@ -60,3 +60,19 @@ export const sendotpemail=async(email,otp)=>{
         console.log(error);
     }
 }
+export const send_reset_email=async(email,otp)=>{
+    try{
+        const mailOptions = {
+            from:"hussienzoughaib@gmail.com",
+            to: email,
+            subject: "Password Reset",
+        text: `Your OTP is : ${otp}.Reset your pass  using it `
+       
+        };
+        await transporter.sendMail(mailOptions);
+        console.log("Password reset  email sent");
+    }
+    catch(error){
+        console.log(error);
+    }
+}
