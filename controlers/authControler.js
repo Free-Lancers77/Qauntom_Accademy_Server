@@ -9,14 +9,14 @@ export const register=async(req,res)=>{
     const {email,name,password}=req.body;
     //chech if they are empty
     if(!email || !name || !password){
-        return res.status(404).json({error:"all fields are required"});
+        return res.status(409).json({error:"all fields are required"});
     }
     try{
         //chech if the user arleady ex  ists
             const finduser= await User.findOne({email});
             console.log(finduser);
             if(finduser){
-                return res.status(404).json({error:"user already exists"});
+                return res.status(409).json({error:"user already exists"});
             }
             //hash pass befor inserting it
             const hashed_pass=await bcrypt.hash(password,10);

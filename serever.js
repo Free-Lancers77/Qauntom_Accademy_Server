@@ -9,8 +9,7 @@ const app = express();
 //middleware
 app.use(express.json());//for json data
 app.use(cookieParser());//for cookies
-app.use(cors({
-    credentials: true,}));//for cors  Prevents Unauthorized Access to Sensitive Data
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 //
 const Port=process.env.PORT || 4000;
 app.use("/api/auth",authRoutes);
