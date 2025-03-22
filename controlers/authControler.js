@@ -84,7 +84,15 @@ export const login=async(req,res)=>{
     })
 
 
-    return res.status(200).json({message:"user logged in successfully"});
+    return res.status(200).json({
+        message: "User logged in successfully",
+        user: {
+          id: targetuser._id,
+          name: targetuser.name,
+          email: targetuser.email,
+          isVerified: targetuser. isVerified, // Include the verified status
+        },
+      });
 
  }
  catch(error){
@@ -148,7 +156,7 @@ export const verfyEmail=async(req,res)=>{
         if(!targetuser){
             return res.status(404).json({message:'user not found'});
         }
-        if(targetuser.isVerfied){
+        if(targetuser.isVerified){
             return res.json({message:'user already verfied'});
         }
         if(targetuser.verifyoption!==otp || targetuser.verifyoption==''){
@@ -157,7 +165,7 @@ export const verfyEmail=async(req,res)=>{
         if(targetuser.verfyexpires<Date.now()){
             return res.json({message:"otp expired"});
         }
-        targetuser.isVerfied=true;
+        targetuser.isVerified=true;
         targetuser.verifyoption="";
         targetuser.verfyexpires=0;
         await targetuser.save();
@@ -244,4 +252,26 @@ export const ResetPass=async(req,res)=>{
     catch(error){
 
     }
+}
+//method 2
+export const ResetPassword=async(req,res)=>{
+    const{newPass,userId}=req.body;
+    if(!newPass || !userId){
+        return res.json({message:"all fields are required"});
+    }
+    try{
+        const targetuser=await User.findById(userId);
+        if(!targetuser){
+            return res.status(404).json({message:"user not found"});
+        }
+        const hashed_pass=await bcrypt.hash(newPass,10);
+        targetuser.password=hashed_pass;
+        await targetuser.save();
+        return res.status(200).json({message:"password reset successfully"});
+
+    }
+    catch(error){
+        return res.json({message:"server error"});
+    }
+
 }

@@ -7,7 +7,7 @@ const userSchema=new mongoose.Schema({
     isAdmin:{type:Boolean,default:false},
     verifyoption:{type:String,default:""},//used to store the token when sent on verfication of email
     verfyexpires:{type:Number,default:0},//set the expiry of token
-    isVerfied:{type:Boolean,default:false},//set true when ujser is verfied
+    isVerified:{type:Boolean,default:false},//set true when ujser is verfied
     resetopt:{type:String,default:""},//save the token for reset pass
     resetoptexpires:{type:Number,default:0},//set the expiry of token
 });
