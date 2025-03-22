@@ -82,17 +82,16 @@ export const login=async(req,res)=>{
 
 
     })
-
-
-    return res.status(200).json({
+    const response = {
         message: "User logged in successfully",
         user: {
           id: targetuser._id,
           name: targetuser.name,
           email: targetuser.email,
-          isVerified: targetuser. isVerified, // Include the verified status
+          isVerified: targetuser.isVerified,
         },
-      });
+      };
+      return res.status(200).json(response);
 
  }
  catch(error){
