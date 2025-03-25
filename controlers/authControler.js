@@ -244,7 +244,17 @@ export const ResetPass=async(req,res)=>{
         targetuser.resetopt="";
         targetuser.resetoptexpires=0;
         await targetuser.save();
-        return res.status(200).json({message:"password reset successfully"});
+        const response = {
+            message: "User pass reset  successfully",
+            user: {
+              id: targetuser._id,
+              name: targetuser.name,
+              email: targetuser.email,
+              password: targetuser.password,
+              isVerified: targetuser.isVerified,
+            },
+          };
+          return res.status(200).json(response);
 
 
     }
