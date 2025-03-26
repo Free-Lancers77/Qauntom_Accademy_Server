@@ -41,19 +41,19 @@ export async function generateResponse(prompt, context = "programming") {
     return "I'm having trouble responding right now. Please try again.";
   }
 }
-export async function debug(prompt ,context="programing"){
+export async function debug(prompt ){
   try{
     let instruction;
-    if (context === "programming") {
+    
       instruction = `[Programming Assistant]
       Please provide:
-      1. The correct code
+      1. The correct code based of the type of programing language provided
       2. Where is the error
       3. Best practices
       4. Common pitfalls
       
       Question: ${prompt}`;
-    }
+    
     
     const result = await model.generateContent(instruction);
     return result.response.text();

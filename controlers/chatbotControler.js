@@ -1,6 +1,6 @@
 import { User } from "../models/usermodel.js";
 // Correct import (must match exact filename with .js extension)
-import { generateResponse } from '../services/geminiAiService.js';
+import { generateResponse ,debug} from '../services/geminiAiService.js';
 
 export const chatWithAI = async (req, res) => {
   try {
@@ -21,7 +21,16 @@ export const chatWithAI = async (req, res) => {
 };
 export const Debug=async(req,res)=>{
   try{
-    const { prompt, language, userId } = req.body;
+    const { prompt,  userId } = req.body;
+    if(!prompt ){
+      return res.json({message:"prompt is required"});
+    }
+    const airesponse=await debug(prompt);
+    await User.findByIdAndUpdate(userId, {
+      $push: { chatHistory: { prompt, response: airesponse } }
+    });
+    res.json({ reply: airesponse });
+
   }
   catch(error){
     console.log(error);
