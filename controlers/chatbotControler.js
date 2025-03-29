@@ -6,8 +6,11 @@ export const chatWithAI = async (req, res) => {
   try {
     const { prompt, language, userId } = req.body;
 
-    // Get AI response
-    const aiResponse = await generateResponse(prompt, language);
+    // Determine context based on prompt or explicit flag
+    const context = language ? "programming" : "general"; // or another logic
+    
+    // Get AI response with proper context
+    const aiResponse = await generateResponse(prompt, context);
 
     // Optional: Save to user's chat history
     await User.findByIdAndUpdate(userId, {

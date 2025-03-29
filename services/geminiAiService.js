@@ -12,12 +12,13 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
  * @param {string} [context="programming"] - Context type ('programming' or 'general')
  * @returns {Promise<string>} AI-generated response
  */
-export async function generateResponse(prompt, context = "programming") {
+export async function generateResponse(prompt, language = "en") {
   try {
     let instruction;
     
-    if (context === "programming") {
-      instruction = `[Programming Assistant]
+    // If language is specified, assume it's a programming question
+    if (language && language !== "en") {
+      instruction = `[Programming Assistant in ${language}]
       Please provide:
       1. A clear explanation
       2. Code examples if applicable
@@ -35,7 +36,6 @@ export async function generateResponse(prompt, context = "programming") {
 
     const result = await model.generateContent(instruction);
     return result.response.text();
-    
   } catch (error) {
     console.error("Gemini Error:", error);
     return "I'm having trouble responding right now. Please try again.";
