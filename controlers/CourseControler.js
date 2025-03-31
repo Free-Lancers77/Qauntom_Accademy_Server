@@ -57,3 +57,20 @@ export const updateCourse = async(req,res)=>{
         return res.json({message:"server error"});
     }
 }
+
+export const deleteCourse = async(req,res)=>{
+    try{
+        const {id} = req.params;
+        const course=await Course.findById(id);
+        console.log(course);
+        if(!course){
+            return res.json({message:"course not found"});
+        }
+        const updatedCourse = await Course.deleteOne(course);
+        return res.json({message:"course deleted successfully"});
+    }
+    catch(error){
+        console.log(error);
+        return res.json({message:"server error"});
+    }
+}
