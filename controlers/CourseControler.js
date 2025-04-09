@@ -1,7 +1,7 @@
 import { Course } from "../models/CoursesModel.js";
 import { ValidateResource } from "./functions.js";
 
-
+//hii
 export const addCourse=async(req,res)=>{
     try{
         const{tittle,description,resources}=req.body;
