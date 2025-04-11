@@ -76,3 +76,27 @@ export const send_reset_email=async(email,otp)=>{
         console.log(error);
     }
 }
+export const send_course_content=async(email,courseTitle,contentType,contentURL)=>{
+    try{
+        const mailOptions = {
+            from: "hussienzoughaib@gmail.com",
+            to: email,
+            subject: `New ${contentType} added to ${courseTitle}`,
+            html: `
+              <h3>Hello 👋</h3>
+              <p>New <strong>${contentType}</strong> content has been added to the course: <strong>${courseTitle}</strong>.</p>
+              <p>You can access it here:</p>
+              <a href="${contentURL}" target="_blank">${contentURL}</a>
+              <br><br>
+              <p>Happy Learning! 🚀</p>
+            `
+          };
+          await transporter.sendMail(mailOptions);
+          console.log("email sent!");
+
+    }
+    catch(error){
+        consloe.log(error);
+    }
+
+}

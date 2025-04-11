@@ -1,4 +1,5 @@
 import { Course } from "../models/CoursesModel.js";
+import { User } from "../models/usermodel.js";
 import { ValidateResource } from "./functions.js";
 
 //hii
@@ -66,11 +67,35 @@ export const deleteCourse = async(req,res)=>{
         if(!course){
             return res.json({message:"course not found"});
         }
-        const updatedCourse = await Course.deleteOne(course);
+         await Course.deleteOne(course);
         return res.json({message:"course deleted successfully"});
     }
     catch(error){
         console.log(error);
         return res.json({message:"server error"});
     }
+}
+export const subscribe=async(req,res)=>{
+    try{
+        const {id}=req.params;
+        const {userId}=req.body;
+        if(!id || !userId){
+            return res.json({message:"all fileds are required"});
+
+        }
+        const targetuser= await User.findById(userId);
+        const targetcourse=await Course.findById(id);
+        if(!targetuser || !targetcourse){
+            return res.status(404).json({message:"user or course is not found!"});
+
+        }
+        if(!targetcourse.subscribers.includes(targetuser)){
+            targetcourse.subscribers.push(targetuser);
+            await targetcourse.save();
+            return res.status(200).json({message:"user is succesfully subscribed to the course!"});
+        }
+        }
+    catch(error){
+        console.log(error);
+        }
 }
