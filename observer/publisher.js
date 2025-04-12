@@ -7,9 +7,9 @@
         this.subscribers.push(user);
     }
 
-    notify(course, content) {
+    notify(course) {
         this.subscribers.forEach(subscriber => {
-            subscriber.update(course, content);
+            subscriber.update(course);
         });
     }
 }

@@ -1,7 +1,8 @@
 import { Course } from "../models/CoursesModel.js";
 import { User } from "../models/usermodel.js";
 import { ValidateResource } from "./functions.js";
-
+import { CoursePublisher } from "../observer/publisher.js";
+import { UserSubscriber } from "../observer/subscriber.js";
 //hii
 export const addCourse=async(req,res)=>{
     try{
@@ -99,3 +100,38 @@ export const subscribe=async(req,res)=>{
         console.log(error);
         }
 }
+    export const addcontent=async(req,res)=>{
+     try{
+        const {id}=req.param;
+        const {new_resources}=req.boyd;
+        if(!ValidateResource(new_resources)){
+            return res.json({message:"inavlid resources"});
+        }   
+        const targetcourse=await Course.findById(id).populate("subscribers");
+        if(!targetcourse){
+            return res.status(404).json({messgae:"course is not found"})
+        }
+        //add resources to the  course
+        targetcourse.resources.push(...new_resources);
+        targetcourse.updatedAt=Date.now();
+        await targetcourse.save();
+        const publisher =new  CoursePublisher(); 
+
+        targetcourse.subscribers.forEach(user => {
+          publisher.addSubscriber(new UserSubscriber(user));
+        });
+        publisher.notify(targetcourse);
+        return res.status(200).json({message:"email sent"});
+        
+
+    
+        
+
+
+
+     }  
+     catch(error){
+        console.log(error);
+        return res.json({message:"server error"});
+     } 
+    }
